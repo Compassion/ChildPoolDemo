@@ -1,0 +1,21 @@
+﻿@model IEnumerable<SponsorAChild.Models.Child>
+
+@{
+    ViewBag.Title = "Sponsor A Child";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Sponsor A Child</h2>
+
+<table id="availableChildren">
+    @foreach (var child in Model)
+    {
+        <tr>
+            <td>
+                <img src="@child.ChildPhotoLink.AbsoluteUri"/><br />
+                @child.ChildName<br />
+                @Html.ActionLink("Sponsor Me", "SponsorChild", "Home", new { childId = child.ChildId }, null)
+            </td>
+        </tr>
+    }
+</table>

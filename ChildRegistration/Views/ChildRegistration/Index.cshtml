@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ChildRegistration.Models.Child>
+
+@{
+    ViewBag.Title = "Child Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<h2>Child Registration</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Child Id</th>
+            <th>Child Name</th>
+            <th>Child Age</th>
+            <th>Country</th>
+            <th>Program Type</th>
+            <th>Other</th>
+            <th>Other Details Only This Service Cares About</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var child in Model)
+        {
+            <tr>
+                <td>@child.ChildId</td>
+                <td>@child.ChildName</td>
+                <td>@child.ChildAge</td>
+                <td>@child.CountryName</td>
+                <td>@child.ProgramType</td>
+                <td>@child.OtherDetailsOnlyThisServiceCaresAbout</td>
+                <td>@child.ChildPhotoLink</td>
+                <td>@Html.ActionLink("Un-Register", "UnregisterChild", "ChildRegistration" , new { childId = @child.ChildId }, null)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@using (Html.BeginForm("RegisterNewChild", "ChildRegistration", FormMethod.Post))
+{
+    <label for="childId">Child Id</label>
+    <input type="text" name="childId" id="childId" value="@Guid.NewGuid()" /><br />
+    
+    <label for="childName">Child Name</label>
+    <input type="text" name="childName" id="childName" value="John Smith" /><br />
+    
+    <label for="childAge">Child Age</label>
+    <input type="text" name="childAge" id="childAge" value="5" /><br />
+    
+    <label for="countryName">Country Name</label>
+    <input type="text" name="countryName" id="countryName" value="Philippines" /><br />
+    
+    <label for="programType">Program Type</label>
+    <input type="text" name="programType" id="programType" value="CDSP" /><br />
+    
+    <label for="childPhotoLink">Child Photo Link</label>
+    <input type="text" name="childPhotoLink" id="childPhotoLink" value="http://placekitten.com/200/300" /><br />
+    
+    <label for="otherDetailsOnlyThisServiceCaresAbout">Other Details Only This Service Cares About</label>
+    <input type="text" name="otherDetailsOnlyThisServiceCaresAbout" id="otherDetailsOnlyThisServiceCaresAbout" value="Happy Birthday" /><br />
+    
+    <input type="submit" value="Register Child" />
+}
+
+<script type="text/javascript">
+    // De-bounce the submit button
+    $(function () {
+        $('form').submit(function () {
+            $('input[type=submit]', this).attr('disabled', 'disabled');
+        });
+    });
+</script>

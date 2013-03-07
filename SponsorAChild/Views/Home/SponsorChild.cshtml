@@ -1,0 +1,26 @@
+﻿@model SponsorAChild.Models.Child
+
+@{
+    ViewBag.Title = "Sponsor Child";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Successful)
+{
+    <h2>Sponsor Child</h2>
+
+    <img src="@Model.ChildPhotoLink.AbsoluteUri"/><br/>
+    <p>Name: @Model.ChildName</p>
+    <p>Age: @Model.ChildAge</p>
+    <p>Country: @Model.CountryName</p>
+    <p>Program: @Model.ProgramType</p>
+
+    @Html.ActionLink("Confirm Sponsorship", "ConfirmSponsorship", "Home", new { childId = Model.ChildId }, null)
+}
+else
+{
+    <h2>Your Sponsorship could not be processed.</h2>
+    @ViewBag.ErrorReason <br />
+    @Html.ActionLink("Sponsor Another Child", "Index", "Home")
+}
+
