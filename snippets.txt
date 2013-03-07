@@ -1,0 +1,167 @@
++++++++++++++++++++++++++++++++++++++
++ Steps 1 - 8                       +
++++++++++++++++++++++++++++++++++++++
+
+
++++ Show Send Methods in ChildRegistration +++
+
++++ ServerEndpoint +++
+
+RegisteredChild Class
++++++++++++++++++++++
+
+IChildRegisteredInProgram
+=========================
+
+Console.WriteLine("Informed of Child Registration. Adding {0} to Child Pool.", message.ChildName);
+
+            // Only store the data that this service requires.
+            Data.ChildId = message.ChildId;
+            Data.ChildName = message.ChildName;
+            Data.ChildAge = message.ChildAge;
+            Data.CountryName = message.CountryName;
+            Data.ProgramType = message.ProgramType;
+            Data.ChildPhotoLink = message.ChildPhotoLink;
+
+IChildHasBeenDeRegistered
+=========================
+
+Console.WriteLine("Child {0} has been de-registered. Giving opportunity for better messages by using timeout.", message.ChildId);
+            Data.MarkAsDeleted = true;
+            RequestUtcTimeout<DeleteChildRegistration>(TimeSpan.FromMinutes(10), t => t.ChildId = Data.ChildId);
+
+DeleteChildRegistration
+=======================
+
+Console.WriteLine("Record for child {0} has been deleted.", Data.ChildId);
+            MarkAsComplete(); // Deletes Data From the ChildPoolService Database
+
+Correlation for above
+=====================
+
+ConfigureMapping<IChildHasBeenDeRegistered>(s => s.ChildId, m => m.ChildId);
+            ConfigureMapping<DeleteChildRegistration>(s => s.ChildId, m => m.ChildId);
+
+RegisterIntentToSponsor
+=======================
+
+Console.WriteLine("Session {0} has requested sponsorship of child {1}", message.SessionId, message.ChildId);
+            
+            // Check if marked for deletion
+            if (Data.MarkAsDeleted)
+            {
+                Bus.Reply<ChildRequestResponse>(m =>
+                {
+                    m.Successful = false;
+                    m.Reason = "This child has been de-registered.";
+                });
+                return;
+            }
+
+            // Check if anyone else is intending to sponsor this child.
+            if (Data.RequestLockId != Guid.Empty)
+            {
+                Bus.Reply<ChildRequestResponse>(m =>
+                { 
+                    m.Successful = false;
+                    m.Reason = "This child is pending sponsorship by someone else.";
+                });
+                return;
+            }
+
+            // Place Lock on Data
+            Data.RequestLockId = message.SessionId;
+
+            RequestUtcTimeout<IntentToSponsorTimeOut>(TimeSpan.FromMinutes(10), t => t.ChildId = Data.ChildId);
+
+            Bus.Reply<ChildRequestResponse>(m =>
+            {
+                m.Successful = true;
+                m.Reason = "This child is now locked for sponsorship pending verification.";
+            });
+
+IntentToSponsorTimeOut
+======================
+
+Console.WriteLine("Intent to sponsor child {0} has expired for session {1}", Data.ChildId, Data.RequestLockId);
+            Data.RequestLockId = Guid.Empty;
+
+VerifyIntentToSponsor
+=====================
+
+Console.WriteLine("Session {0} has verified sponsorship of child {1}", message.SessionId, message.ChildId);
+
+            // Check if marked for deletion
+            if (Data.MarkAsDeleted)
+            {
+                Bus.Reply<ChildRequestResponse>(m =>
+                {
+                    m.Successful = false;
+                    m.Reason = "This child has been de-registered.";
+                });
+                return;
+            }
+
+            // Check if anyone else is intending to sponsor this child.
+            if (Data.RequestLockId != message.SessionId)
+            {
+                Bus.Reply<ChildRequestResponse>(m =>
+                {
+                    m.Successful = false;
+                    m.Reason = "Cannot Verify sponsorship for this child as someone else already has preference.";
+                });
+                return;
+            }
+
+            Bus.Publish<IChildHasBeenSponsored>(m =>
+            {
+                m.ChildId = Data.ChildId;
+                m.SessionId = Data.RequestLockId;
+            });
+
+            Bus.Reply<ChildRequestResponse>(m =>
+            {
+                m.Successful = true;
+                m.Reason = "Child has been sponsored.";
+            });
+
+            MarkAsComplete(); // Deletes Data From the ChildPoolService Database
+
+Correlation for Above
+=====================
+
+ConfigureMapping<RegisterIntentToSponsor>(s => s.ChildId, m => m.ChildId);
+            ConfigureMapping<IntentToSponsorTimeOut>(s => s.ChildId, m => m.ChildId);
+            ConfigureMapping<VerifyIntentToSponsor>(s => s.ChildId, m => m.ChildId);
+
+
++++++++++++++++++++++++++++++++++++++
++ Steps 9                           +
++++++++++++++++++++++++++++++++++++++
+
++++ ChildPoolListings +++
+
+ChildListingsController
++++++++++++++++++++++++
+
+GetChildren
+===========
+
+using (var session = WebApiApplication.DocumentStore.OpenSession())
+            {
+                var results = session.Query<RegisteredChild>()
+                    .Where(c => c.MarkAsDeleted == false)
+                    .Where(c => c.RequestLockId == Guid.Empty)
+                    .ToArray();
+                return Json(results, JsonRequestBehavior.AllowGet);
+            }
+
+GetChild
+========
+
+using (var session = WebApiApplication.DocumentStore.OpenSession())
+            {
+                var result = session.Query<RegisteredChild>().FirstOrDefault(c => c.ChildId == Guid.Parse(childId));
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+
