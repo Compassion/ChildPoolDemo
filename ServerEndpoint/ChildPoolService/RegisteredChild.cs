@@ -10,10 +10,10 @@ namespace ServerEndpoint.ChildPoolService
 {
     public class RegisteredChild : Saga<RegisteredChildData>,
         IAmStartedByMessages<IChildRegisteredInProgram>,
-        IHandleMessages<RegisterIntentToSponsor>,
-        IHandleTimeouts<IntentToSponsorTimeOut>,
+        IHandleMessages<RegisterIntentToSponsor>,        
         IHandleMessages<VerifyIntentToSponsor>,
         IHandleMessages<IChildHasBeenDeRegistered>,
+        IHandleTimeouts<IntentToSponsorTimeOut>,
         IHandleTimeouts<DeleteChildRegistration>
     {
         public override void ConfigureHowToFindSaga()
