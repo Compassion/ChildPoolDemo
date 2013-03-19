@@ -9,14 +9,15 @@ namespace ChildPoolListings.Controllers
     {
         // GET: /ChildListings/GetChildren/
         public JsonResult GetChildren()
-        {
-            throw new NotImplementedException();
+        {//todo:demo7            
+            throw new NotImplementedException("demo7 code");
         }
+
 
         // GET: /ChildListings/GetChild/
         public JsonResult GetChild(string childId)
-        {
-            throw new NotImplementedException();
+        {//todo:demo8
+            throw new NotImplementedException("demo8 code");
         }
     }
 }
