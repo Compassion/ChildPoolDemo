@@ -1,3 +1,13 @@
+
+Server Endpoint -> RegisteredChild.cs - services demo
+
+ChildPool Listings (webservice) -> ChildListingsController.cs - CQRS demos setting up the GET's
+
+Sponsor A child -> Homecontroller.cs
+
+
+
+
 +++++++++++++++++++++++++++++++++++++
 + Steps 1 - 8                       +
 +++++++++++++++++++++++++++++++++++++

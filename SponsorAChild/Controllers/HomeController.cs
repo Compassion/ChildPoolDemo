@@ -15,23 +15,24 @@ namespace SponsorAChild.Controllers
     {
         // GET: /Home/
         public ActionResult Index()
-        {
-            throw new NotImplementedException();
+        {//todo:demo9
+            throw new NotImplementedException("demo9");
         }
 
         // GET: /Home/SponsorChild/
         public ActionResult SponsorChild(string childId)
-        {
-            throw new NotImplementedException();
+        {//todo:demo10
+            throw new NotImplementedException("demo10");
         }
 
         public ActionResult ConfirmSponsorship(string childId)
-        {
-            throw new NotImplementedException();
+        {//todo:demo12
+            throw new NotImplementedException("demo12");
+
         }
 
         private void CommandResponseCallback(IAsyncResult asyncResult)
-        {
+        {//todo:demo11            
         }
     }
 }

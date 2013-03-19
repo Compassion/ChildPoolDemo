@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>SnippetFile1</Title>
+      <Author>jboyd@compassion.com.au</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>demo12</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp"><![CDATA[            var sessionId = (Guid)Session["SessionId"];
+            var childIdGuid = Guid.Parse(childId);
+
+            var command = new VerifyIntentToSponsor
+            {
+                ChildId = childIdGuid,
+                SessionId = sessionId
+            };
+
+            var successful = MvcApplication.Bus.Send(command)
+                .Register(CommandResponseCallback, this)
+                .AsyncWaitHandle.WaitOne(5000);
+
+            if (!successful)
+            {
+                ViewBag.Successful = false;
+                ViewBag.ErrorReason = "Timed Out";
+            }
+
+            return View("ConfirmSponsorship");]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>SnippetFile1</Title>
+      <Author>jboyd@compassion.com.au</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>demo4</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp"><![CDATA[            Console.WriteLine("Session {0} has requested sponsorship of child {1}", message.SessionId, message.ChildId);
+
+            // Check if marked for deletion
+            if (Data.MarkAsDeleted)
+            {
+                Bus.Reply<ChildRequestResponse>(m =>
+                {
+                    m.Successful = false;
+                    m.Reason = "This child has been de-registered.";
+                });
+                return;
+            }
+
+            // Check if anyone else is intending to sponsor this child.
+            if (Data.RequestLockId != Guid.Empty)
+            {
+                Bus.Reply<ChildRequestResponse>(m =>
+                {
+                    m.Successful = false;
+                    m.Reason = "This child is pending sponsorship by someone else.";
+                });
+                return;
+            }
+
+            // Place Lock on Data
+            Data.RequestLockId = message.SessionId;
+
+            RequestUtcTimeout<IntentToSponsorTimeOut>(TimeSpan.FromMinutes(10), t => t.ChildId = Data.ChildId);
+
+            Bus.Reply<ChildRequestResponse>(m =>
+            {
+                m.Successful = true;
+                m.Reason = "This child is now locked for sponsorship pending verification.";
+            });]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

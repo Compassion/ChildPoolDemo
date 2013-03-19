@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>SnippetFile1</Title>
+      <Author>jboyd@compassion.com.au</Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>demo8</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp"><![CDATA[            using (var session = WebApiApplication.DocumentStore.OpenSession())
+            {
+                var result = session.Query<RegisteredChild>().FirstOrDefault(c => c.ChildId == Guid.Parse(childId));
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
