@@ -2,7 +2,7 @@
 
 namespace Messages.Commands
 {
-    public interface IChildHasBeenDeRegistered
+    public interface ChildHasBeenDeRegistered
     {
         Guid ChildId { get; set; }
     }

@@ -9,15 +9,26 @@ namespace ChildPoolListings.Controllers
     {
         // GET: /ChildListings/GetChildren/
         public JsonResult GetChildren()
-        {//todo:demo7            
-            throw new NotImplementedException("demo7 code");
+        {
+            using (var session = WebApiApplication.DocumentStore.OpenSession())
+            {
+                var results = session.Query<RegisteredChild>()
+                    .Where(c => c.MarkAsDeleted == false)
+                    .Where(c => c.RequestLockId == Guid.Empty)
+                    .ToArray();
+                return Json(results, JsonRequestBehavior.AllowGet);
+            }
         }
 
 
         // GET: /ChildListings/GetChild/
         public JsonResult GetChild(string childId)
-        {//todo:demo8
-            throw new NotImplementedException("demo8 code");
+        {
+            using (var session = WebApiApplication.DocumentStore.OpenSession())
+            {
+                var result = session.Query<RegisteredChild>().FirstOrDefault(c => c.ChildId == Guid.Parse(childId));
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

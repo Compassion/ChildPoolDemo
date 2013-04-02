@@ -63,7 +63,7 @@ namespace ChildRegistration.Controllers
 
                 session.SaveChanges();
 
-                MvcApplication.Bus.Send<IChildHasBeenDeRegistered>(m => m.ChildId = Guid.Parse(childId));
+                MvcApplication.Bus.Send<ChildHasBeenDeRegistered>(m => m.ChildId = Guid.Parse(childId));
             }
 
             return RedirectToAction("Index", "ChildRegistration");

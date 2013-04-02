@@ -10,8 +10,7 @@ namespace ServerEndpoint.ChildPoolService
 {
     public class RegisteredChild : Saga<RegisteredChildData>,
         IAmStartedByMessages<IChildRegisteredInProgram>,
-        IHandleMessages<IChildHasBeenDeRegistered>,
-        IHandleTimeouts<DeleteChildRegistration>,
+        IHandleMessages<ChildHasBeenDeRegistered>,
         IHandleMessages<RegisterIntentToSponsor>,
         IHandleTimeouts<IntentToSponsorTimeOut>,
         IHandleMessages<VerifyIntentToSponsor>
@@ -24,11 +23,7 @@ namespace ServerEndpoint.ChildPoolService
         { //todo:demo1       
         }
 
-        public void Handle(IChildHasBeenDeRegistered message)
-        { //todo:demo2
-        }
-
-        public void Timeout(DeleteChildRegistration state)
+        public void Handle(ChildHasBeenDeRegistered message)
         { //todo:demo3
         }
 
