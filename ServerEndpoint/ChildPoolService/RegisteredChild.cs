@@ -16,7 +16,11 @@ namespace ServerEndpoint.ChildPoolService
         IHandleMessages<VerifyIntentToSponsor>
     {
         public override void ConfigureHowToFindSaga()
-        { //todo:demo0            
+        { 
+            ConfigureMapping<DeleteChildRegistration>(s => s.ChildId, m => m.ChildId);
+            ConfigureMapping<RegisterIntentToSponsor>(s => s.ChildId, m => m.ChildId);
+            ConfigureMapping<IntentToSponsorTimeOut>(s => s.ChildId, m => m.ChildId);
+            ConfigureMapping<VerifyIntentToSponsor>(s => s.ChildId, m => m.ChildId);
         }        
 
         public void Handle(IChildRegisteredInProgram message)
