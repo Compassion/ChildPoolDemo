@@ -24,7 +24,7 @@ namespace ServerEndpoint.ChildPoolService
         }        
 
         public void Handle(IChildRegisteredInProgram message)
-        { //todo:demo1       
+        { //todo:demo1       (have you started raven?)
         }
 
         public void Handle(ChildHasBeenDeRegistered message)
