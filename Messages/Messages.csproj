@@ -39,9 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ChildHasBeenDeRegistered.cs" />
     <Compile Include="Commands\RegisterIntentToSponsor.cs" />
     <Compile Include="Commands\VerifyIntentToSponsor.cs" />
-    <Compile Include="Commands\IChildHasBeenDeRegistered.cs" />
     <Compile Include="Events\IChildHasBeenSponsored.cs" />
     <Compile Include="Commands\IChildRegisteredInProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
